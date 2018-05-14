@@ -1,7 +1,6 @@
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const { BadRequest } = require("@feathersjs/errors");
-const memory = require('feathers-memory');
 
 const app = express(feathers());
 
@@ -25,6 +24,9 @@ class Hello {
 }
 
 app.use('hello', new Hello());
+
+
+// hooks
 
 const toUpperCase = async context => {
     context.params.query.name = context.params.query.name.toUpperCase();
@@ -52,6 +54,9 @@ const helloHooks = {
 };
 
 app.service('hello').hooks(helloHooks);
+
+
+// server
 
 const server = app.listen(3030);
 
