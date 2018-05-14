@@ -13,6 +13,8 @@ app.configure(express.rest());
 app.configure(logger(morgan('dev')));
 app.use(express.errorHandler());
 
+// service
+
 class Hello {
     constructor() {
         this.data = {};
@@ -28,12 +30,17 @@ class Hello {
 }
 
 app.use('hello', new Hello());
+
+
+// profiler
+
 app.configure(profiler({ stats: 'detail' }));
 console.log('pending', getPending());
 console.log(require('util').inspect(getProfile(), {
     depth: 5,
     colors: true
 }));
+
 
 // hooks
 
