@@ -1,12 +1,15 @@
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const { BadRequest } = require("@feathersjs/errors");
+const morgan = require('morgan');
+const logger = require('feathers-logger');
 
 const app = express(feathers());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.configure(express.rest());
+app.configure(logger(morgan('dev')));
 app.use(express.errorHandler());
 
 class Hello {
