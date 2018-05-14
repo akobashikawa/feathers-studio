@@ -1,21 +1,31 @@
 const feathers = require('@feathersjs/feathers');
-const app = feathers();
+const express = require('@feathersjs/express');
+const { BadRequest } = require("@feathersjs/errors");
+const memory = require('feathers-memory');
 
-app.use('helloService', {
-    async get(name) {
-        const message = `Hello ${name}!`
-        return {
-            name,
-            message
-        }
+const app = express(feathers());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.configure(express.rest());
+app.use(express.errorHandler());
+
+class Hello {
+    constructor() {
+        this.data = {};
     }
-});
 
-async function hello(name) {
-    const service = app.service('helloService');
-    const result = await service.get(name);
+    async find(param) {
+        this.data.name = param.query.name;
+        const name = this.data.name || 'World';
 
-    console.log(result);
+        this.data.message = `Hello ${name}`;
+        return this.data;
+    }
 }
 
-hello('World');
+app.use('hello', new Hello());
+
+const server = app.listen(3030);
+
+server.on('listening', () => console.log('Feathers REST API started at http://localhost:3030'));
