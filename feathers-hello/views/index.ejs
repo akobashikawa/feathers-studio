@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h1>Hello</h1>
+        <p>
+            <input type="text" placeholder="Your Name" v-model="name">
+            <button v-on:click="hello">Hello</button>
+        </p>
+        <p>
+            {{ result }}
+        </p>
+    </div>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                name: '',
+                result: ''
+            },
+            methods: {
+                hello: function () {
+                    const url = `/api/hello?name=${this.name}`;
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(data => {
+                            this.result = data.message;
+                        })
+                        .catch(err => console.log(err));
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -4,6 +4,7 @@ const { BadRequest } = require("@feathersjs/errors");
 const morgan = require('morgan');
 const logger = require('feathers-logger');
 const { profiler, getProfile, getPending } = require('feathers-profiler');
+const path = require('path');
 
 const app = express(feathers());
 
@@ -29,7 +30,16 @@ class Hello {
     }
 }
 
-app.use('hello', new Hello());
+app.use('/api/hello', new Hello());
+
+
+// views
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.get('/', function (req, res, next) {
+    res.render('index');
+})
 
 
 // profiler
@@ -69,7 +79,7 @@ const helloHooks = {
     }
 };
 
-app.service('hello').hooks(helloHooks);
+app.service('/api/hello').hooks(helloHooks);
 
 
 // server
