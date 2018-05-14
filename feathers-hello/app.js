@@ -3,6 +3,7 @@ const express = require('@feathersjs/express');
 const { BadRequest } = require("@feathersjs/errors");
 const morgan = require('morgan');
 const logger = require('feathers-logger');
+const { profiler, getProfile, getPending } = require('feathers-profiler');
 
 const app = express(feathers());
 
@@ -27,7 +28,12 @@ class Hello {
 }
 
 app.use('hello', new Hello());
-
+app.configure(profiler({ stats: 'detail' }));
+console.log('pending', getPending());
+console.log(require('util').inspect(getProfile(), {
+    depth: 5,
+    colors: true
+}));
 
 // hooks
 

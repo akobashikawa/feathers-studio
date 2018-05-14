@@ -14,6 +14,7 @@
     "@feathersjs/express": "^1.2.2",
     "@feathersjs/feathers": "^3.1.5",
     "feathers-logger": "^0.3.0",
+    "feathers-profiler": "^0.1.5",
     "morgan": "^1.9.0"
   }
 }
