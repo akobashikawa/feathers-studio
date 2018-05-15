@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const logger = require('feathers-logger');
 const { profiler, getProfile, getPending } = require('feathers-profiler');
 const path = require('path');
+const todoService = require('./services/todo');
+const todoHooks = require('./hooks/todo');
 
 const app = express(feathers());
 
@@ -16,21 +18,7 @@ app.use(express.errorHandler());
 
 // service
 
-class Hello {
-    constructor() {
-        this.data = {};
-    }
-
-    async find(params) {
-        this.data.name = params.query.name;
-        const name = this.data.name || 'World';
-
-        this.data.message = `Hello ${name}`;
-        return this.data;
-    }
-}
-
-app.use('/api/hello', new Hello());
+app.use('/api/todo', todoService);
 
 
 // views
@@ -54,18 +42,7 @@ console.log(require('util').inspect(getProfile(), {
 
 // hooks
 
-const setTimestamp = async context => {
-    context.result.timestamp = new Date();
-    return context;
-};
-
-const helloHooks = {
-    after: {
-        all: setTimestamp
-    }
-};
-
-app.service('/api/hello').hooks(helloHooks);
+app.service('/api/todo').hooks(todoHooks);
 
 
 // server
