@@ -12,18 +12,41 @@
 <body>
     <div class="container" id="app">
         <h1>To Do</h1>
-
+        <ul>
+            <li v-for="task in tasks">
+                <div class="task">
+                    <pre>{{ task | json }}</pre>
+                </div>
+            </li>
+        </ul>
     </div>
 
     <script src="https://unpkg.com/vue"></script>
+    <script src="js/main.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
             data: {
                 tasks: []
             },
+            filters: {
+                json: function (value) {
+                    return JSON.stringify(value, null, 2);
+                }
+            },
+            mounted: function () {
+                this.getTasks();
+            },
             methods: {
-
+                getTasks: function () {
+                    const url = `/api/todo`;
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(result => {
+                            this.tasks = result.data;
+                        })
+                        .catch(err => console.log(err));
+                }
             }
         });
     </script>

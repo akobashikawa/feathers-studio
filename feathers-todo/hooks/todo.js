@@ -7,7 +7,7 @@ const setTimestamp = async context => {
 
 const hooks = {
     after: {
-        all: setTimestamp
+        // all: setTimestamp
     }
 };
 

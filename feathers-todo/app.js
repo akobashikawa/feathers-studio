@@ -16,18 +16,21 @@ app.configure(express.rest());
 app.configure(logger(morgan('dev')));
 app.use(express.errorHandler());
 
-// service
+// static
+app.use(express.static('public'));
+
+// services
 
 app.use('/api/todo', todoService);
 
 
 // views
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.get('/', function (req, res, next) {
-    res.render('index');
-})
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
+// app.get('/', function (req, res, next) {
+//     res.render('index');
+// })
 
 
 // profiler
@@ -43,6 +46,20 @@ console.log(require('util').inspect(getProfile(), {
 // hooks
 
 app.service('/api/todo').hooks(todoHooks);
+
+// test
+app.service('/api/todo').create({
+    description: 'To do',
+    status: 'todo'
+});
+app.service('/api/todo').create({
+    description: 'Doing',
+    status: 'doing'
+});
+app.service('/api/todo').create({
+    description: 'Done',
+    status: 'done'
+});
 
 
 // server

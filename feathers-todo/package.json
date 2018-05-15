@@ -15,6 +15,7 @@
     "@feathersjs/feathers": "^3.1.5",
     "ejs": "^2.6.1",
     "feathers-logger": "^0.3.0",
+    "feathers-memory": "^2.1.1",
     "feathers-profiler": "^0.1.5",
     "morgan": "^1.9.0"
   }
