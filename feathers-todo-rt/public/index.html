@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>To Do</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <style>
+        .todo input {}
+
+        .doing input {
+            background-color: #ffa;
+        }
+
+        .done input {
+            text-decoration: line-through;
+            background-color: #afa;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h1>Real Time To Do</h1>
+        <ul class="list-unstyled">
+            <li v-for="task in tasks">
+                <div class="input-group" :class="{ todo: (task.status === 'todo'), doing: (task.status === 'doing'), done: (task.status === 'done')}">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="checkbox" v-model="task.status === 'done'" @click="toogleStatus(task)">
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" v-model="task.description" @blur="updateTask(task)" @keyup.enter="updateTask(task)" @keyup.esc="cancelEditTask(task)">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" @click="deleteTask(task)">X</button>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="New task" v-model="newTask" ref="newTask">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" @click="addTask(newTask)">Add</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
