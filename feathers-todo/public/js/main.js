@@ -35,10 +35,11 @@ var app = new Vue({
                     task.status = 'todo';
                     break;
             }
+            this.updateTask(task);
         },
         addTask: function (newTask) {
-            const task = newTask && newTask.trim();
-            if (!task) {
+            const description = newTask && newTask.trim();
+            if (!description) {
                 return;
             }
 
@@ -48,7 +49,7 @@ var app = new Vue({
                 "Content-Type": "application/json"
             };
             const data = {
-                description: task,
+                description,
                 status: 'todo'
             }
             fetch(url, {
@@ -58,6 +59,7 @@ var app = new Vue({
             })
                 .then(res => res.json())
                 .then(result => {
+                    console.log('created');
                     this.tasks.push(Object.assign(data, result));
                     console.log(this.tasks);
                     this.newTask = '';
@@ -76,9 +78,45 @@ var app = new Vue({
             })
                 .then(res => res.json())
                 .then(result => {
+                    console.log('deleted');
                     this.tasks = this.tasks.filter(item => item.id !== id);
                 })
                 .catch(err => console.log(err));
-        }
+        },
+        updateTask: function (task) {
+            const id = task.id;
+
+            const url = `/api/todo/${id}`;
+            const headers = {
+                Accept: "application/json, text/plain, */*",
+                "Content-Type": "application/json"
+            };
+            const data = {
+                description: task.description,
+                status: task.status
+            };
+            fetch(url, {
+                method: 'PUT',
+                headers: new Headers(headers),
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    console.log('updated');
+                })
+                .catch(err => console.log(err));
+        },
+        cancelEditTask: function (task) {
+            const id = task.id;
+            const url = `/api/todo/${id}`;
+            fetch(url)
+                .then(res => res.json())
+                .then(result => {
+                    console.log('cancel edit');
+                    let theTask = this.tasks.find(item => item.id == id);
+                    theTask = Object.assign(theTask, result);
+                })
+                .catch(err => console.log(err));
+        },
     }
 });

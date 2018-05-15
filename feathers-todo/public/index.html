@@ -33,7 +33,7 @@
                             <input type="checkbox" v-model="task.status === 'done'" @click="toogleStatus(task)">
                         </div>
                     </div>
-                    <input type="text" class="form-control" v-model="task.description">
+                    <input type="text" class="form-control" v-model="task.description" @blur="updateTask(task)" @keyup.enter="updateTask(task)" @keyup.esc="cancelEditTask(task)">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" @click="deleteTask(task)">X</button>
                     </div>
