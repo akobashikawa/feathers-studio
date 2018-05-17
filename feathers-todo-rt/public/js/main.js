@@ -1,8 +1,23 @@
 const socket = io('http://localhost:3030');
 
-socket.on('created', message =>
-    console.log('Someone created a task', message)
-);
+socket.on('everybody', function (message) {
+    console.log(message);
+});
+
+socket.on('api/todo created', task => {
+    console.log('created', task);
+    app.getTasks();
+});
+
+socket.on('api/todo updated', task => {
+    console.log('updated', task);
+    // app.getTasks();
+});
+
+socket.on('api/todo deleted', task => {
+    console.log('deleted', task);
+    // app.getTasks();
+});
 
 var app = new Vue({
     el: '#app',
@@ -49,11 +64,11 @@ var app = new Vue({
                 return;
             }
 
-            const url = `/api/todo`;
-            const headers = {
-                Accept: "application/json, text/plain, */*",
-                "Content-Type": "application/json"
-            };
+            // const url = `/api/todo`;
+            // const headers = {
+            //     Accept: "application/json, text/plain, */*",
+            //     "Content-Type": "application/json"
+            // };
             const data = {
                 description,
                 status: 'todo'
@@ -66,10 +81,8 @@ var app = new Vue({
                 //     if (error) throw error
                 //     console.log('Current tasks', messageList);
                 // });
-                const task = Object.assign(data, result);
-                socket.emit('created', task);
-                this.tasks.push(task);
-                console.log(this.tasks);
+                // const task = Object.assign(data, result);
+                // this.tasks.push(task);
                 this.newTask = '';
                 this.$refs['newTask'].focus();
             });
@@ -93,39 +106,50 @@ var app = new Vue({
                 return;
             }
             const id = task.id;
-            const url = `/api/todo/${id}`;
-            fetch(url, {
-                method: 'DELETE'
-            })
-                .then(res => res.json())
-                .then(result => {
-                    console.log('deleted');
-                    this.tasks = this.tasks.filter(item => item.id !== id);
-                })
-                .catch(err => console.log(err));
+            // const url = `/api/todo/${id}`;
+            socket.emit('delete', '/api/todo', {id}, (error, result) => {
+                if (error) {
+                    throw error;
+                }
+            });
+            // fetch(url, {
+            //     method: 'DELETE'
+            // })
+            //     .then(res => res.json())
+            //     .then(result => {
+            //         console.log('deleted');
+            //         this.tasks = this.tasks.filter(item => item.id !== id);
+            //     })
+            //     .catch(err => console.log(err));
         },
         updateTask: function (task) {
             const id = task.id;
 
-            const url = `/api/todo/${id}`;
-            const headers = {
-                Accept: "application/json, text/plain, */*",
-                "Content-Type": "application/json"
-            };
+            // const url = `/api/todo/${id}`;
+            // const headers = {
+            //     Accept: "application/json, text/plain, */*",
+            //     "Content-Type": "application/json"
+            // };
             const data = {
+                id,
                 description: task.description,
                 status: task.status
             };
-            fetch(url, {
-                method: 'PUT',
-                headers: new Headers(headers),
-                body: JSON.stringify(data)
-            })
-                .then(res => res.json())
-                .then(result => {
-                    console.log('updated');
-                })
-                .catch(err => console.log(err));
+            socket.emit('update', '/api/todo', data, (error, result) => {
+                if (error) {
+                    throw error;
+                }
+            });
+            // fetch(url, {
+            //     method: 'PUT',
+            //     headers: new Headers(headers),
+            //     body: JSON.stringify(data)
+            // })
+            //     .then(res => res.json())
+            //     .then(result => {
+            //         console.log('updated');
+            //     })
+            //     .catch(err => console.log(err));
         },
         cancelEditTask: function (task) {
             const id = task.id;
