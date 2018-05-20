@@ -104,11 +104,11 @@ var app = new Vue({
             };
             socket.emit('update', '/api/todo', id, data, null);
         },
-        _removeTask: function (error, id) {
+        _removeTask: function (error, task) {
             if (error) {
                 throw error;
             }
-            this.tasks = this.tasks.filter(item => item.id !== id);
+            this.tasks = this.tasks.filter(item => item.id !== task.id);
         },
         removeTask: function (task) {
             if (!confirm('Remove task: ' + task.description.substr(0, 14))) {
