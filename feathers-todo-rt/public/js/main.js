@@ -1,7 +1,7 @@
 const socket = io('http://localhost:3030');
 
 socket.on('everybody', function (message) {
-    console.log(message);
+    console.log('everybody:', message);
 });
 
 socket.on('api/todo created', task => {
@@ -68,7 +68,7 @@ var app = new Vue({
             }
             this.updateTask(task);
         },
-        _addTask: function(error, task) {
+        _addTask: function (error, task) {
             if (error) {
                 throw error;
             }
